@@ -1,0 +1,103 @@
+package linkedlist
+
+type Node[T comparable] struct {
+	data T
+	next *Node[T]
+}
+
+type LinkedList[T comparable] struct {
+	head *Node[T]
+	Size int
+}
+
+func (l *LinkedList[T]) traverseToEnd() *Node[T] {
+	if l.head == nil {
+		return nil
+	}
+	tail := l.head
+	for tail.next != nil {
+		tail = tail.next
+	}
+	return tail
+}
+
+func (l *LinkedList[T]) Iterator() chan T {
+	c := make(chan T)
+	go func() {
+		temp := l.head
+		for temp != nil {
+			c <- temp.data
+			temp = temp.next
+		}
+		close(c)
+	}()
+	return c
+}
+
+func (l *LinkedList[T]) Append(elements ...T) {
+	if len(elements) == 0 {
+		return
+	}
+
+	if l.head == nil {
+		l.head = &Node[T]{data: elements[0]}
+		l.Size++
+	}
+
+	tail := l.traverseToEnd()
+	for _, e := range elements[1:] {
+		tail.next = &Node[T]{data: e}
+		tail = tail.next
+		l.Size++
+	}
+}
+
+func (l *LinkedList[T]) Remove(element T) {
+	var prev *Node[T]
+	for temp := l.head; temp != nil; prev, temp = temp, temp.next {
+		if temp.data == element {
+			if prev == nil {
+				l.head = l.head.next
+			} else {
+				prev.next = temp.next
+			}
+			l.Size--
+			break
+		}
+	}
+}
+
+func (l *LinkedList[T]) RemoveAtPosition(pos int) (res *T) {
+	if pos < 1 || pos > l.Size {
+		return nil
+	}
+
+	var prev *Node[T]
+	temp := l.head
+	for i := 1; i != pos; i, prev, temp = i+1, temp, temp.next {
+	}
+	res = &temp.data
+	if prev == nil {
+		l.head = l.head.next
+	} else {
+		prev.next = temp.next
+	}
+	l.Size--
+	return
+}
+
+func (l *LinkedList[T]) Reverse() {
+	if l.Size == 0 {
+		return
+	}
+
+	var prev, cur *Node[T]
+	temp := l.head
+	for temp != nil {
+		cur = temp
+		temp = temp.next
+		cur.next = prev
+		prev = cur
+	}
+	l.head = cur
+}
