@@ -1,16 +1,18 @@
-package linkedlist
+package main
 
-type Node[T comparable] struct {
-	data T
-	next *Node[T]
-}
+type (
+	LinkedList[T comparable] struct {
+		head *node[T]
+		Size int
+	}
 
-type LinkedList[T comparable] struct {
-	head *Node[T]
-	Size int
-}
+	node[T comparable] struct {
+		data T
+		next *node[T]
+	}
+)
 
-func (l *LinkedList[T]) traverseToEnd() *Node[T] {
+func (l *LinkedList[T]) traverseToEnd() *node[T] {
 	if l.head == nil {
 		return nil
 	}
@@ -40,20 +42,20 @@ func (l *LinkedList[T]) Append(elements ...T) {
 	}
 
 	if l.head == nil {
-		l.head = &Node[T]{data: elements[0]}
+		l.head = &node[T]{data: elements[0]}
 		l.Size++
 	}
 
 	tail := l.traverseToEnd()
 	for _, e := range elements[1:] {
-		tail.next = &Node[T]{data: e}
+		tail.next = &node[T]{data: e}
 		tail = tail.next
 		l.Size++
 	}
 }
 
 func (l *LinkedList[T]) Remove(element T) {
-	var prev *Node[T]
+	var prev *node[T]
 	for temp := l.head; temp != nil; prev, temp = temp, temp.next {
 		if temp.data == element {
 			if prev == nil {
@@ -72,7 +74,7 @@ func (l *LinkedList[T]) RemoveAtPosition(pos int) (res *T) {
 		return nil
 	}
 
-	var prev *Node[T]
+	var prev *node[T]
 	temp := l.head
 	for i := 1; i != pos; i, prev, temp = i+1, temp, temp.next {
 	}
@@ -91,7 +93,7 @@ func (l *LinkedList[T]) Reverse() {
 		return
 	}
 
-	var prev, cur *Node[T]
+	var prev, cur *node[T]
 	temp := l.head
 	for temp != nil {
 		cur = temp

@@ -1,6 +1,6 @@
-package stack
+package main
 
-type Stack[T any] struct {
+type Stack[T comparable] struct {
 	array []T
 	Size  int
 }
