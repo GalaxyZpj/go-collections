@@ -1,4 +1,4 @@
-package main
+package go_collections
 
 type Stack[T comparable] struct {
 	array []T
