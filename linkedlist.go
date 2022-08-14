@@ -2,17 +2,17 @@ package go_collections
 
 type (
 	LinkedList[T comparable] struct {
-		head *node[T]
+		head *linkedListNode[T]
 		Size int
 	}
 
-	node[T comparable] struct {
+	linkedListNode[T comparable] struct {
 		data T
-		next *node[T]
+		next *linkedListNode[T]
 	}
 )
 
-func (l *LinkedList[T]) traverseToEnd() *node[T] {
+func (l *LinkedList[T]) traverseToEnd() *linkedListNode[T] {
 	if l.head == nil {
 		return nil
 	}
@@ -42,20 +42,20 @@ func (l *LinkedList[T]) Append(elements ...T) {
 	}
 
 	if l.head == nil {
-		l.head = &node[T]{data: elements[0]}
+		l.head = &linkedListNode[T]{data: elements[0]}
 		l.Size++
 	}
 
 	tail := l.traverseToEnd()
 	for _, e := range elements[1:] {
-		tail.next = &node[T]{data: e}
+		tail.next = &linkedListNode[T]{data: e}
 		tail = tail.next
 		l.Size++
 	}
 }
 
 func (l *LinkedList[T]) Remove(element T) {
-	var prev *node[T]
+	var prev *linkedListNode[T]
 	for temp := l.head; temp != nil; prev, temp = temp, temp.next {
 		if temp.data == element {
 			if prev == nil {
@@ -74,7 +74,7 @@ func (l *LinkedList[T]) RemoveAtPosition(pos int) (res *T) {
 		return nil
 	}
 
-	var prev *node[T]
+	var prev *linkedListNode[T]
 	temp := l.head
 	for i := 1; i != pos; i, prev, temp = i+1, temp, temp.next {
 	}
@@ -93,7 +93,7 @@ func (l *LinkedList[T]) Reverse() {
 		return
 	}
 
-	var prev, cur *node[T]
+	var prev, cur *linkedListNode[T]
 	temp := l.head
 	for temp != nil {
 		cur = temp
