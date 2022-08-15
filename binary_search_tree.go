@@ -1,6 +1,9 @@
 package go_collections
 
-import constraints "golang.org/x/exp/Constraints"
+import (
+	fmt "fmt"
+	constraints "golang.org/x/exp/Constraints"
+)
 
 type (
 	BinarySearchTree[T constraints.Ordered] struct {
@@ -104,6 +107,10 @@ func traverseInorderReverse[T constraints.Ordered](root *bstNode[T], c chan *bst
 	traverseInorder(root.right, c)
 	c <- root
 	traverseInorder(root.left, c)
+}
+
+func (n *bstNode[T]) Print() string {
+	return fmt.Sprintf("%v * %d", n.data, n.occurance)
 }
 
 func (t *BinarySearchTree[T]) Add(elements ...T) {
