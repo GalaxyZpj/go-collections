@@ -25,12 +25,9 @@ func newNode[T constraints.Ordered](element T) *bstNode[T] {
 
 func findSmallestNode[T constraints.Ordered](root *bstNode[T]) (smallestNode *bstNode[T]) {
 	smallestNode = root
-	for smallestNode.left.left != nil {
+	for smallestNode.left != nil {
 		smallestNode = smallestNode.left
 	}
-	temp := smallestNode.left
-	smallestNode.left = nil
-	smallestNode = temp
 	return
 }
 
@@ -67,9 +64,8 @@ func remove[T constraints.Ordered](root *bstNode[T], element T) *bstNode[T] {
 		return root.left
 	} else {
 		smallestNode := findSmallestNode(root.right)
-		smallestNode.left = root.left
-		smallestNode.right = root.right
-		root = smallestNode
+		root.data, root.occurance = smallestNode.data, smallestNode.occurance
+		root.right = remove(root.right, smallestNode.data)
 	}
 
 	return root
@@ -104,9 +100,9 @@ func traverseInorderReverse[T constraints.Ordered](root *bstNode[T], c chan *bst
 		return
 	}
 
-	traverseInorder(root.right, c)
+	traverseInorderReverse(root.right, c)
 	c <- root
-	traverseInorder(root.left, c)
+	traverseInorderReverse(root.left, c)
 }
 
 func (n *bstNode[T]) Print() string {
